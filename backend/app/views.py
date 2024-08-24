@@ -1,8 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Person, a_temp, z_temp, k_temp
-from .serializers import PersonSerializer, ATempSerializer, ZTempSerializer, KTempSerializer
+from .models import Person, a_temp, z_temp, k_temp, Archive
+from .serializers import PersonSerializer, ATempSerializer, ZTempSerializer, KTempSerializer, ArchiveSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.http import HttpResponse
 
@@ -35,3 +35,13 @@ class ImportData(APIView):
     def get(self, request):
         # Test route to check if API is working
         return Response({"message": "Import Data API is working!"}, status=status.HTTP_200_OK)
+
+# Archive List/Create View
+class ArchiveListCreate(generics.ListCreateAPIView):
+    queryset = Archive.objects.all()
+    serializer_class = ArchiveSerializer
+
+# Archive Detail/Update/Delete View
+class ArchiveRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Archive.objects.all()
+    serializer_class = ArchiveSerializer
