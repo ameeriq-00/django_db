@@ -1,7 +1,5 @@
-# app/serializers.py
-
 from rest_framework import serializers
-from .models import Person, ATemp, ZTemp, KTemp, Archive, Dispatch
+from .models import Person, a_temp, z_temp, k_temp
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,25 +8,15 @@ class PersonSerializer(serializers.ModelSerializer):
 
 class ATempSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ATemp
+        model = a_temp
         fields = '__all__'
 
 class ZTempSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ZTemp
+        model = z_temp
         fields = '__all__'
 
 class KTempSerializer(serializers.ModelSerializer):
     class Meta:
-        model = KTemp
-        fields = '__all__'
-
-class ArchiveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Archive
-        fields = '__all__'
-
-class DispatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Dispatch
+        model = k_temp
         fields = '__all__'

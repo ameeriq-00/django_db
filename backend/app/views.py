@@ -1,34 +1,37 @@
-# app/views.py
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import Person, a_temp, z_temp, k_temp
+from .serializers import PersonSerializer, ATempSerializer, ZTempSerializer, KTempSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.http import HttpResponse
 
-from rest_framework import generics
-from .models import Person, ATemp, ZTemp, KTemp, Archive, Dispatch
-from .serializers import PersonSerializer, ATempSerializer, ZTempSerializer, KTempSerializer, ArchiveSerializer, DispatchSerializer
+def home(request):
+    return HttpResponse("Welcome to the Home Page")
 
+# Person List/Create View
 class PersonListCreate(generics.ListCreateAPIView):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
 
+# Person Detail/Update/Delete View
 class PersonRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
 
-class ATempListCreate(generics.ListCreateAPIView):
-    queryset = ATemp.objects.all()
-    serializer_class = ATempSerializer
+# Import Data View
+class ImportData(APIView):
+    parser_classes = [MultiPartParser, FormParser]
 
-class ZTempListCreate(generics.ListCreateAPIView):
-    queryset = ZTemp.objects.all()
-    serializer_class = ZTempSerializer
+    def post(self, request, person_id):
+        person = Person.objects.get(pk=person_id)
+        excel_file = request.FILES.get('file')
 
-class KTempListCreate(generics.ListCreateAPIView):
-    queryset = KTemp.objects.all()
-    serializer_class = KTempSerializer
+        # Logic to process the Excel file and save data to appropriate model
+        # based on the template (a_temp, z_temp, or k_temp)
 
-class ArchiveListCreate(generics.ListCreateAPIView):
-    queryset = Archive.objects.all()
-    serializer_class = ArchiveSerializer
+        return Response(status=status.HTTP_200_OK)
 
-class DispatchListCreate(generics.ListCreateAPIView):
-    queryset = Dispatch.objects.all()
-    serializer_class = DispatchSerializer
-
+    def get(self, request):
+        # Test route to check if API is working
+        return Response({"message": "Import Data API is working!"}, status=status.HTTP_200_OK)
