@@ -13,6 +13,8 @@ from .serializers import (
 )
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.http import HttpResponse
+import pandas as pd
+from dateutil import parser
 
 def home(request):
     return HttpResponse("Welcome to the Home Page")
@@ -47,18 +49,28 @@ class DispatchRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Dispatch.objects.all()
     serializer_class = DispatchSerializer
 
-# a_temp List/Create View
+# ATemp List/Create View
 class ATempListCreate(generics.ListCreateAPIView):
     queryset = ATemp.objects.all()
     serializer_class = ATempSerializer
+class ATempRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ATemp.objects.all()
+    serializer_class = ATempSerializer
 
-# z_temp List/Create View
+
+# ZTemp List/Create View
 class ZTempListCreate(generics.ListCreateAPIView):
     queryset = ZTemp.objects.all()
     serializer_class = ZTempSerializer
+class ZTempRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ZTemp.objects.all()
+    serializer_class = ZTempSerializer
 
-# k_temp List/Create View
+# KTemp List/Create View
 class KTempListCreate(generics.ListCreateAPIView):
+    queryset = KTemp.objects.all()
+    serializer_class = KTempSerializer
+class KTempRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = KTemp.objects.all()
     serializer_class = KTempSerializer
 
@@ -75,10 +87,65 @@ class ImportData(APIView):
         person = Person.objects.get(pk=person_id)
         excel_file = request.FILES.get('file')
 
-        # Logic to process the Excel file and save data to appropriate model
-        # based on the template (a_temp, z_temp, or k_temp)
+        if not excel_file:
+            return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(status=status.HTTP_200_OK)
+        df = pd.read_excel(excel_file)
 
-    def get(self, request):
-        return Response({"message": "Import Data API is working!"}, status=status.HTTP_200_OK)
+        if set(df.columns) == {'E_REPORT', 'CALLER_NUMBER', 'CALLED_NUMBER', 'THIRD_PARTY_NUMBER', 'CALL_INITIAL_TIME', 'CONVERSATION_DURATION', 'CITY', 'SITE_NAME', 'CHARGED_MOBILE_USER_IMEI', 'CHARGED_MOBILE_USER_IMSI', 'LON', 'LAT', 'SITE_ID', 'CGI', 'COMMENTS'}:
+            for _, row in df.iterrows():
+                ATemp.objects.create(
+                    PersonID=person,
+                    E_REPORT=row['E_REPORT'],
+                    CALLER_NUMBER=row['CALLER_NUMBER'],
+                    CALLED_NUMBER=row['CALLED_NUMBER'],
+                    THIRD_PARTY_NUMBER=row['THIRD_PARTY_NUMBER'],
+                    CALL_INITIAL_TIME=parser.parse(row['CALL_INITIAL_TIME'], dayfirst=True),
+                    CONVERSATION_DURATION=row['CONVERSATION_DURATION'],
+                    CITY=row['CITY'],
+                    SITE_NAME=row['SITE_NAME'],
+                    CHARGED_MOBILE_USER_IMEI=row['CHARGED_MOBILE_USER_IMEI'],
+                    CHARGED_MOBILE_USER_IMSI=row['CHARGED_MOBILE_USER_IMSI'],
+                    LON=row['LON'],
+                    LAT=row['LAT'],
+                    SITE_ID=row['SITE_ID'],
+                    CGI=row['CGI'],
+                    COMMENTS=row['COMMENTS']
+                )
+        elif set(df.columns) == {'Date', 'CALL_TYPE', 'Duration', 'Calling Number', 'Called Number', 'Call Location', 'Site ID', 'Split'}:
+            for _, row in df.iterrows():
+                ZTemp.objects.create(
+                    PersonID=person,
+                    Date=parser.parse(row['Date'], dayfirst=True),
+                    CALL_TYPE=row['CALL_TYPE'],
+                    Duration=row['Duration'],
+                    Calling_Number=row['Calling Number'],
+                    Called_Number=row['Called Number'],
+                    Call_Location=row['Call Location'],
+                    Site_ID=row['Site ID'],
+                    Split=row['Split']
+                )
+        elif set(df.columns) == {'DATETIME', 'CALL_TYPE', 'MSISDN', 'IMSI', 'B_PARTY_MSISDN', 'DURATION', 'CALLINGNUMBER', 'CALLEDNUMBER', 'IMEI', 'CALLLOCATION', 'SITE_ID', 'SITE', 'GOVERNORATE', 'LONGITUDE', 'LATITUDE'}:
+            for _, row in df.iterrows():
+                KTemp.objects.create(
+                    PersonID=person,
+                    DATETIME=parser.parse(row['DATETIME'], dayfirst=True),
+                    CALL_TYPE=row['CALL_TYPE'],
+                    MSISDN=row['MSISDN'],
+                    IMSI=row['IMSI'],
+                    B_PARTY_MSISDN=row['B_PARTY_MSISDN'],
+                    DURATION=row['DURATION'],
+                    CALLINGNUMBER=row['CALLINGNUMBER'],
+                    CALLEDNUMBER=row['CALLEDNUMBER'],
+                    IMEI=row['IMEI'],
+                    CALLLOCATION=row['CALLLOCATION'],
+                    SITE_ID=row['SITE_ID'],
+                    SITE=row['SITE'],
+                    GOVERNORATE=row['GOVERNORATE'],
+                    LONGITUDE=row['LONGITUDE'],
+                    LATITUDE=row['LATITUDE']
+                )
+        else:
+            return Response({"error": "Unrecognized template"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Data imported successfully"}, status=status.HTTP_200_OK)

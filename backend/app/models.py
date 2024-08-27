@@ -1,81 +1,78 @@
 from django.db import models
 
-# Persons Model
 class Person(models.Model):
-    name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=255)
-    created_date = models.DateTimeField(auto_now_add=True)
+    Name = models.CharField(max_length=255)
+    PhoneNumber = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return self.Name
 
-# a_temp Model
 class ATemp(models.Model):
-    person = models.ForeignKey(Person, related_name='a_temp', on_delete=models.CASCADE)
-    e_report = models.CharField(max_length=255)
-    caller_number = models.CharField(max_length=255)
-    called_number = models.CharField(max_length=255)
-    third_party_number = models.CharField(max_length=255, null=True, blank=True)
-    call_initial_time = models.DateTimeField()
-    conversation_duration = models.IntegerField()
-    city = models.CharField(max_length=255)
-    site_name = models.CharField(max_length=255)
-    charged_mobile_user_imei = models.CharField(max_length=255)
-    charged_mobile_user_imsi = models.CharField(max_length=255)
-    lon = models.FloatField()
-    lat = models.FloatField()
-    site_id = models.CharField(max_length=255)
-    cgi = models.CharField(max_length=255)
+    PersonID = models.ForeignKey(Person, related_name='a_temp', on_delete=models.CASCADE)
+    E_REPORT = models.CharField(max_length=255)
+    CALLER_NUMBER = models.CharField(max_length=255)
+    CALLED_NUMBER = models.CharField(max_length=255)
+    THIRD_PARTY_NUMBER = models.CharField(max_length=255, default='UNKNOWN')
+    CALL_INITIAL_TIME = models.DateTimeField()
+    CONVERSATION_DURATION = models.IntegerField()
+    CITY = models.CharField(max_length=255)
+    SITE_NAME = models.CharField(max_length=255)
+    CHARGED_MOBILE_USER_IMEI = models.CharField(max_length=255)
+    CHARGED_MOBILE_USER_IMSI = models.CharField(max_length=255)
+    LON = models.FloatField()
+    LAT = models.FloatField()
+    SITE_ID = models.CharField(max_length=255)
+    CGI = models.CharField(max_length=255)
+    COMMENTS = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.person.name} - {self.caller_number}"
+        return self.CALLER_NUMBER
 
-# z_temp Model
 class ZTemp(models.Model):
-    person = models.ForeignKey(Person, related_name='z_temp', on_delete=models.CASCADE)
-    date = models.DateTimeField()
-    call_type = models.CharField(max_length=255)
-    duration = models.IntegerField()
-    calling_number = models.CharField(max_length=255)
-    called_number = models.CharField(max_length=255)
-    call_location = models.CharField(max_length=255)
-    site_id = models.CharField(max_length=255)
-    split = models.CharField(max_length=255, null=True, blank=True)
+    PersonID = models.ForeignKey(Person, related_name='z_temp', on_delete=models.CASCADE)
+    Date = models.DateTimeField()
+    CALL_TYPE = models.CharField(max_length=255)
+    Duration = models.IntegerField()
+    Calling_Number = models.CharField(max_length=255)
+    Called_Number = models.CharField(max_length=255)
+    Call_Location = models.CharField(max_length=255)
+    Site_ID = models.CharField(max_length=255)
+    Split = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.person.name} - {self.calling_number}"
+        return self.Calling_Number
 
-# k_temp Model
 class KTemp(models.Model):
-    person = models.ForeignKey(Person, related_name='k_temp', on_delete=models.CASCADE)
-    datetime = models.DateTimeField()
-    call_type = models.CharField(max_length=255)
-    msisdn = models.CharField(max_length=255)
-    imsi = models.CharField(max_length=255)
-    b_party_msisdn = models.CharField(max_length=255)
-    duration = models.IntegerField()
-    calling_number = models.CharField(max_length=255)
-    called_number = models.CharField(max_length=255)
-    imei = models.CharField(max_length=255)
-    call_location = models.CharField(max_length=255)
-    site_id = models.CharField(max_length=255)
-    site = models.CharField(max_length=255)
-    governorate = models.CharField(max_length=255)
-    longitude = models.FloatField()
-    latitude = models.FloatField()
+    PersonID = models.ForeignKey(Person, related_name='k_temp', on_delete=models.CASCADE)
+    DATETIME = models.DateTimeField()
+    CALL_TYPE = models.CharField(max_length=255)
+    MSISDN = models.CharField(max_length=255)
+    IMSI = models.CharField(max_length=255)
+    B_PARTY_MSISDN = models.CharField(max_length=255)
+    DURATION = models.IntegerField()
+    CALLINGNUMBER = models.CharField(max_length=255)
+    CALLEDNUMBER = models.CharField(max_length=255)
+    IMEI = models.CharField(max_length=255)
+    CALLLOCATION = models.CharField(max_length=255)
+    SITE_ID = models.CharField(max_length=255)
+    SITE = models.CharField(max_length=255)
+    GOVERNORATE = models.CharField(max_length=255)
+    LONGITUDE = models.FloatField()
+    LATITUDE = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.person.name} - {self.msisdn}"
+        return self.MSISDN
 
-# Archive Model
 class Archive(models.Model):
-    t = models.AutoField(primary_key=True)
+    T = models.AutoField(primary_key=True)
     phone_number = models.CharField(max_length=255)
     name_info = models.CharField(max_length=255)
     bookid = models.CharField(max_length=255)
@@ -93,9 +90,8 @@ class Archive(models.Model):
     def __str__(self):
         return self.phone_number
 
-# Dispatch Model
 class Dispatch(models.Model):
-    t = models.AutoField(primary_key=True)
+    T = models.AutoField(primary_key=True)
     name_accused = models.CharField(max_length=255)
     saved_numbers = models.CharField(max_length=255)
     saved_name = models.CharField(max_length=255)
@@ -107,9 +103,8 @@ class Dispatch(models.Model):
     def __str__(self):
         return self.name_accused
 
-# Media Model
 class Media(models.Model):
-    person = models.ForeignKey(Person, related_name='media', on_delete=models.CASCADE)
+    PersonID = models.ForeignKey(Person, related_name='media', on_delete=models.CASCADE)
     file_path = models.CharField(max_length=255)
     file_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
