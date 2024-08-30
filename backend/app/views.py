@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from .models import Person, ATemp, ZTemp, KTemp, Archive, Dispatch, Media
 from .serializers import (
     PersonSerializer,
@@ -23,65 +24,81 @@ def home(request):
 class PersonListCreate(generics.ListCreateAPIView):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = [IsAuthenticated]
 
 # Person Detail/Update/Delete View
 class PersonRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = [IsAuthenticated]
 
 # Archive List/Create View
 class ArchiveListCreate(generics.ListCreateAPIView):
     queryset = Archive.objects.all()
     serializer_class = ArchiveSerializer
+    permission_classes = [IsAuthenticated]
 
 # Archive Detail/Update/Delete View
 class ArchiveRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Archive.objects.all()
     serializer_class = ArchiveSerializer
+    permission_classes = [IsAuthenticated]
 
 # Dispatch List/Create View
 class DispatchListCreate(generics.ListCreateAPIView):
     queryset = Dispatch.objects.all()
     serializer_class = DispatchSerializer
+    permission_classes = [IsAuthenticated]
 
 # Dispatch Detail/Update/Delete View
 class DispatchRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Dispatch.objects.all()
     serializer_class = DispatchSerializer
+    permission_classes = [IsAuthenticated]
 
 # ATemp List/Create View
 class ATempListCreate(generics.ListCreateAPIView):
     queryset = ATemp.objects.all()
     serializer_class = ATempSerializer
+    permission_classes = [IsAuthenticated]
+
 class ATempRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = ATemp.objects.all()
     serializer_class = ATempSerializer
-
+    permission_classes = [IsAuthenticated]
 
 # ZTemp List/Create View
 class ZTempListCreate(generics.ListCreateAPIView):
     queryset = ZTemp.objects.all()
     serializer_class = ZTempSerializer
+    permission_classes = [IsAuthenticated]
+
 class ZTempRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = ZTemp.objects.all()
     serializer_class = ZTempSerializer
+    permission_classes = [IsAuthenticated]
 
 # KTemp List/Create View
 class KTempListCreate(generics.ListCreateAPIView):
     queryset = KTemp.objects.all()
     serializer_class = KTempSerializer
+    permission_classes = [IsAuthenticated]
+
 class KTempRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = KTemp.objects.all()
     serializer_class = KTempSerializer
+    permission_classes = [IsAuthenticated]
 
 # Media List/Create View
 class MediaListCreate(generics.ListCreateAPIView):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
+    permission_classes = [IsAuthenticated]
 
 # Import Data View
 class ImportData(APIView):
     parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, person_id):
         person = Person.objects.get(pk=person_id)

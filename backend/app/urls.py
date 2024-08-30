@@ -1,5 +1,6 @@
 from django.urls import path
 from app import views
+from .auth_views import CustomTokenObtainPairView, CustomTokenRefreshView, protected_view
 
 urlpatterns = [
     path('persons/', views.PersonListCreate.as_view(), name='person-list-create'),
@@ -16,5 +17,8 @@ urlpatterns = [
     path('dispatches/', views.DispatchListCreate.as_view(), name='dispatch-list-create'),
     path('dispatches/<int:pk>/', views.DispatchRetrieveUpdateDestroy.as_view(), name='dispatch-detail'),
     path('media/', views.MediaListCreate.as_view(), name='media-list-create'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    path('protected/', protected_view, name='protected'),
     path('', views.home, name='home'),
 ]
