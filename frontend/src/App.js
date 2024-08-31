@@ -13,29 +13,46 @@ import GlobalSearch from "./pages/GlobalSearch";
 import Login from "./components/auth/Login";
 import Layout from "./layout/Layout";
 import { useAuth } from "./context/AuthContext";
+import Persons from "./pages/Persons";
 
 function App() {
-  const { isAuthenticated } = useAuth(); // Using AuthContext
+  const { isAuthenticated } = useAuth();
 
   return (
     <Router>
-      {isAuthenticated ? (
-        <Layout>
-          <Routes>
-            <Route path="/person-details" element={<PersonDetails />} />
-            <Route path="/archive" element={<Archive />} />
-            <Route path="/dispatch" element={<Dispatch />} />
-            <Route path="/global-search" element={<GlobalSearch />} />
-            <Route path="/" element={<Home />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </Layout>
-      ) : (
+      <Layout>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route
+            path="/persons"
+            element={isAuthenticated ? <Persons /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/person-details/:id"
+            element={
+              isAuthenticated ? <PersonDetails /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/archive"
+            element={isAuthenticated ? <Archive /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/dispatch"
+            element={isAuthenticated ? <Dispatch /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/global-search"
+            element={
+              isAuthenticated ? <GlobalSearch /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/"
+            element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+          />
         </Routes>
-      )}
+      </Layout>
     </Router>
   );
 }
