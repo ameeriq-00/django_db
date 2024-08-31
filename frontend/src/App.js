@@ -11,79 +11,31 @@ import Archive from "./pages/Archive";
 import Dispatch from "./pages/Dispatch";
 import GlobalSearch from "./pages/GlobalSearch";
 import Login from "./components/auth/Login";
-import Layout from "./components/Layout";
+import Layout from "./layout/Layout";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem("token");
+  const { isAuthenticated } = useAuth(); // Using AuthContext
 
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <Login />}
-        />
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? (
-              <Layout>
-                <Home />
-              </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/person-details"
-          element={
-            isAuthenticated ? (
-              <Layout>
-                <PersonDetails />
-              </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/archive"
-          element={
-            isAuthenticated ? (
-              <Layout>
-                <Archive />
-              </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/dispatch"
-          element={
-            isAuthenticated ? (
-              <Layout>
-                <Dispatch />
-              </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/global-search"
-          element={
-            isAuthenticated ? (
-              <Layout>
-                <GlobalSearch />
-              </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-      </Routes>
+      {isAuthenticated ? (
+        <Layout>
+          <Routes>
+            <Route path="/person-details" element={<PersonDetails />} />
+            <Route path="/archive" element={<Archive />} />
+            <Route path="/dispatch" element={<Dispatch />} />
+            <Route path="/global-search" element={<GlobalSearch />} />
+            <Route path="/" element={<Home />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Layout>
+      ) : (
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      )}
     </Router>
   );
 }
