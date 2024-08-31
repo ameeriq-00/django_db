@@ -18,35 +18,72 @@ function App() {
 
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/person-details"
-            element={
-              isAuthenticated ? <PersonDetails /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="/archive"
-            element={isAuthenticated ? <Archive /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/dispatch"
-            element={isAuthenticated ? <Dispatch /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/global-search"
-            element={
-              isAuthenticated ? <GlobalSearch /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="/"
-            element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
-          />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+        />
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Layout>
+                <Home />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/person-details"
+          element={
+            isAuthenticated ? (
+              <Layout>
+                <PersonDetails />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/archive"
+          element={
+            isAuthenticated ? (
+              <Layout>
+                <Archive />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/dispatch"
+          element={
+            isAuthenticated ? (
+              <Layout>
+                <Dispatch />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/global-search"
+          element={
+            isAuthenticated ? (
+              <Layout>
+                <GlobalSearch />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+      </Routes>
     </Router>
   );
 }
