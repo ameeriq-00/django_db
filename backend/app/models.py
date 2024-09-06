@@ -104,11 +104,12 @@ class Dispatch(models.Model):
         return self.name_accused
 
 class Media(models.Model):
-    PersonID = models.ForeignKey(Person, related_name='media', on_delete=models.CASCADE)
-    file_path = models.CharField(max_length=255)
+    PersonID = models.ForeignKey('Person', related_name='media', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='uploads/', null=True, blank=True)  # Updated this line
+    file_path = models.CharField(max_length=255)  # Keep this for backward compatibility
     file_type = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.file_path
+        return self.file_path or str(self.file)

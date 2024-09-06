@@ -32,6 +32,16 @@ class DispatchSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MediaSerializer(serializers.ModelSerializer):
+    file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Media
-        fields = '__all__'
+        fields = ['id', 'PersonID', 'file', 'file_path', 'file_type', 'file_url', 'created_at', 'updated_at']
+
+    def get_file_url(self, obj):
+        request = self.context.get('request')
+        if obj.file and hasattr(obj.file, 'url'):
+            return request.build_absolute_uri(obj.file.url)
+        elif obj.file_path:
+            return request.build_absolute_uri(obj.file_path)
+        return None
